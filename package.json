@@ -1,0 +1,34 @@
+{
+  "name": "import-react-component",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Provides functions for easily integrating React components in CommonJS projects. Note that this package handles the integration of React's DOM into the project using React as a dependency, and does not convert JSX modules to JS.",
+  "keywords": [
+    "react",
+    "utility",
+    "react-utility",
+    "convert-react",
+    "import-react"
+  ],
+  "license": "ISC",
+  "author": {
+    "name": "Jonah Galloway-Fenwick",
+    "url": "https://jonahgallowayfenwick.ca"
+  },
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rm -rf dist && tsc"
+  },
+  "dependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "typescript": "~5.8.3",
+    "vite": "^7.0.4"
+  }
+}
+
