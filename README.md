@@ -32,6 +32,8 @@ Create an HTML element which will act as the root of the imported React DOM. Thi
 </react-component>
 ```
 
+Children of an HTML element that is the root of a React component are passed to that component as children.
+
 ### Functions
 
 **Import a single React component at an HTML element distinguished by its `id` attribute.**
@@ -52,7 +54,7 @@ Create an HTML element which will act as the root of the imported React DOM. Thi
 
 **Import one or more instances of a React component at each HTML element distinguished by their tag.**
 
-`ImportReactComponentByClass(rootTag: string, component: any, props?: Object | Object[])`
+`ImportReactComponentByTag(rootTag: string, component: any, props?: Object | Object[])`
 
 - `rootTag`: The HTML tag of the root element or elements.
 - `component`: The imported React component.
