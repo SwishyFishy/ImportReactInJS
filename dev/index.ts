@@ -29,88 +29,40 @@ class ElementPropsCountMismatchError extends Error
 
 // Assign a passed React component with passed props to passed HTMLElement
 // Assign the children of passed HTMLElement as children of created React component
-function AssignReactComponent(rootElement: Element, component: any, props: Object = {})
+function AssignReactComponent(rootElement: Node, component: any, props: Object = {})
 {
-    createRoot(rootElement).render(
+    let castRootElement = rootElement as Element;
+
+    createRoot(castRootElement).render(
         createElement(component, props, 
             createElement("div", {dangerouslySetInnerHTML: {
-                __html: rootElement.innerHTML
+                __html: castRootElement.innerHTML
             }})
         )
     );
 }
 
-// Callable Functions //
-////////////////////////
-
-// Maps a React component to a single HTML with passed id
-export function ImportReactComponentById(rootId: string, component: any, props: Object = {})
-{
-    // Get element with passed id
-    const rootElement: Element | null = document.getElementById(rootId);
-    if (!rootElement)
-    {
-        throw new ElementDoesNotExistError(`No element exists with id ${rootId}`);
-    }
-    
-    // Create the passed React component at the root element
-    AssignReactComponent(rootElement, component, props);
-}
-
-// Maps a React component to each HTML element with passed class
-// props: Object        -> props are passed to each component
-// props: Object[]      -> props.length must equal number of elements with passed class. Bijective mapping
-export function ImportReactComponentByClass(rootClass: string, component: any, props: Object | Object[] = {})
-{
-    // Get elements with passed class
-    const rootElements: HTMLCollectionOf<Element> = document.getElementsByClassName(rootClass);
-    if (rootElements.length == 0)
-    {
-        throw new ElementDoesNotExistError(`No elements exist with class ${rootClass}`);
-    }
-    
-    // Create the passed React component at the root elements
-    if (Array.isArray(props))
-    {
-        if (rootElements.length != props.length)
-        {
-            throw new ElementPropsCountMismatchError(`Number of extant elements with class ${rootClass} does not match props.length`);
-        }
-        else
-        {
-            for (let i: number = 0; i < rootElements.length; i++)
-            {
-                AssignReactComponent(rootElements[i], component, props[i]);
-            }
-        }
-    }
-    else
-    {
-        for (let i: number = 0; i < rootElements.length; i++)
-        {
-            AssignReactComponent(rootElements[i], component, props);
-        }
-    }
-}
+// Callable Function //
+///////////////////////
 
 // Maps a React component to each HTML element that is passed tag
 // props: Object        -> props are passed to each component
 // props: Object[]      -> props.length must equal number of elements that are passed tag. Bijective mapping
-export function ImportReactComponentByTag(rootTag: string, component: any, props: Object | Object[] = {})
+export function ImportReactComponents(componentType: string, component: any, props: Object | Object[] = {})
 {
 // Get elements with passed class
-    const rootElements: HTMLCollectionOf<Element> = document.getElementsByTagName(rootTag);
+    const rootElements: NodeList = document.querySelectorAll(`react-component[data-component=${componentType}]`);
     if (rootElements.length == 0)
     {
-        throw new ElementDoesNotExistError(`No elements exist named ${rootTag}`);
+        throw new ElementDoesNotExistError(`No ${componentType} react-component elements exist.`);
     }
-    
+
     // Create the passed React component at the root elements
     if (Array.isArray(props))
     {
         if (rootElements.length != props.length)
         {
-            throw new ElementPropsCountMismatchError(`Number of extant ${rootTag} elements does not match props.length`);
+            throw new ElementPropsCountMismatchError(`Number of extant ${componentType} elements does not match props.length`);
         }
         else
         {
