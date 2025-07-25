@@ -12,11 +12,11 @@ This package does not transpile JSX into vanilla JS. Rather, it brings React alo
 
 ### Setup
 
-Import any React components and the `ImportReactComponent()` function to a script attached to your HTML.
+Import any React components and the `ImportReactComponents()` and `RenderReactComponents()` functions to a script attached to your HTML.
 
 ```typescript
 import { ExampleReactComponent } from '...';
-import { ImportReactComponents } from 'import-react-component';
+import { ImportReactComponents, RenderReactComponents } from 'import-react-component';
 ```
 
 In your HTML, create a `<react-component>` HTML element with a `data-component` custom attribute. This element is the root of an imported React DOM, and you'll use the attribute to indicate which `<react-component>` elements spawn any given React component.
@@ -46,6 +46,8 @@ ImportReactComponents(componentType: string, component: any, props: Object | Obj
 * `component`: An imported React component.
 * `props`: If passed as an object, the object is passed to the React component as props. If passed as an array, the first element is passed as props to the first React component, the second to the second, and so on.
 
+Once all the React components have been imported, call the `RenderReactComponents()` function.
+
 ## Example
 
 ```html
@@ -70,17 +72,18 @@ html
 index.js
 
 import { ComponentWithProps, ComponentWithoutProps } from 'a-react-library';
-import { ImportReactComponents } from 'import-react-component';
+import { ImportReactComponents, RenderReactComponents } from 'import-react-component';
 
 ImportReactComponents("componentWithProps", ExampleComponent, [{...}, {...}]);
 ImportReactComponents("componentWithoutProps", ExampleComponent);
+RenderReactComponents();
 ```
 
 ## Expected Behaviour FAQ
 
 ### Dynamic DOM
 
-`ImportReactComponents()` uses the Document's `querySelectorAll()` method to retrieve the appropriate `<react-component>` elements. Because this method returns a static `NodeList`, if the DOM is updated dynamically new `<react-component>` elements will not spawn React components. To resolve this, call `ImportReactComponents()` after inserting new `<react-component>` elements into the DOM or removing old elements from it.
+Because `ImportReactComponents()` uses the Document's `querySelectorAll()` method to retrieve the appropriate `<react-component>` elements as a static `NodeList`, updating the DOM dynamically will not add or remove React components. To resolve this, call `ImportReactComponents()` and `RenderReactComponents()` again after dynamically inserting or removing `<react-component>` elements.
 
 ### Nested React Components
 
