@@ -74,8 +74,8 @@ index.js
 import { ComponentWithProps, ComponentWithoutProps } from 'a-react-library';
 import { ImportReactComponents, RenderReactComponents } from 'import-react-component';
 
-ImportReactComponents("componentWithProps", ExampleComponent, [{...}, {...}]);
-ImportReactComponents("componentWithoutProps", ExampleComponent);
+ImportReactComponents("componentWithProps", ComponentWithProps, [{...}, {...}]);
+ImportReactComponents("componentWithoutProps", ComponentWithoutProps);
 RenderReactComponents();
 ```
 
