@@ -10,6 +10,10 @@ This package does not transpile JSX into vanilla JS. Rather, it brings React alo
 
 ## Usage
 
+### Install
+
+`npm i import-react-component`
+
 ### Setup
 
 Import any React components and the `ImportReactComponents()` and `RenderReactComponents()` functions to a script attached to your HTML.
@@ -53,6 +57,8 @@ Once all the React components have been imported, call the `RenderReactComponent
 ```html
 html
 
+
+
 <script type="module" src="...index.js"></script>
 
 ...
@@ -70,6 +76,8 @@ html
 
 ```typescript
 index.js
+
+
 
 import { ComponentWithProps, ComponentWithoutProps } from 'a-react-library';
 import { ImportReactComponents, RenderReactComponents } from 'import-react-component';
