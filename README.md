@@ -8,57 +8,80 @@ Certain projects don't lend themselves to using the React framework, or are alre
 
 This package does not transpile JSX into vanilla JS. Rather, it brings React along as a dependency and handles the implementation of React DOMs into the larger project. Since React is a dependency of this project, you will not save any space on installation as opposed to just installing React. The intended function of this package is to make React a more flexible option for designs that can only partially embrace its strengths.
 
-## WARNING
-
-This package uses React's `dangerouslySetInnerHTML` parameter to apply children to imported React components. Do not pass unsanitized or untrusted HTML as a child to any imported React component. [View React's documentation here](https://react.dev/reference/react-dom/components/common#dangerously-setting-the-inner-html).
-
 ## Usage
 
 ### Setup
 
-Import any React components, and the desired function from this package.
+Import any React components and the `ImportReactComponent()` function to a script attached to your HTML.
 
-```javascript
+```typescript
 import { ExampleReactComponent } from '...';
-import { ImportReactComponentById, ImportReactComponentByClass, ImportReactComponentByTag } from 'import-react-component';
+import { ImportReactComponents } from 'import-react-component';
 ```
 
-Create an HTML element which will act as the root of the imported React DOM. This can be any element, but since it's function is purely syntactic it's recommended to use a custom element.
+In your HTML, create a `<react-component>` HTML element with a `data-component` custom attribute. This element is the root of an imported React DOM, and you'll use the attribute to indicate which `<react-component>` elements spawn any given React component.
+
+Your `<react-component>` element can have children, which will be passed into the React component as children.
 
 ```html
-<react-component>
+<react-component data-component="exampleReactComponent">
     <p>Children</p>
     <p>More children</p>
 </react-component>
 ```
 
-Children of an HTML element that is the root of a React component are passed to that component as children.
+### WARNING
 
-### Functions
+This package uses React's `dangerouslySetInnerHTML` parameter to apply children to imported React components. Do not pass unsanitized or untrusted HTML as a child to any imported React component. [View React's documentation here](https://react.dev/reference/react-dom/components/common#dangerously-setting-the-inner-html).
 
-**Import a single React component at an HTML element distinguished by its `id` attribute.**
+### Adding the React Component
 
-`ImportReactComponentById(rootId: string, component: any, props?: Object)`
+In the attached script, call the `ImportReactComponents()` function. This function has three parameters:
 
-- `rootId`: The HTML Id of the root element.
-- `component`: The imported React component.
-- `props`: Optional. An object containing props that will be passed to the React component.
+```typescript
+ImportReactComponents(componentType: string, component: any, props: Object | Object[] = {})
+```
 
-**Import one or more instances of a React component at each HTML element distinguished by their `class` attribute.**
+* `componentType`: A value of one or more `data-component` attributes in your HTML.
+* `component`: An imported React component.
+* `props`: If passed as an object, the object is passed to the React component as props. If passed as an array, the first element is passed as props to the first React component, the second to the second, and so on.
 
-`ImportReactComponentByClass(rootClass: string, component: any, props?: Object | Object[])`
+## Example
 
-- `rootClass`: The HTML class of the root element or elements.
-- `component`: The imported React component.
-- `props`: Optional. If passed as an object, those props are passed to each instance of the React component. If passed as an array of objects, the array must contain exactly as many objects as there are HTML elements with the passed `rootClass`. The props are bijectively mapped to the React components such that props are applied in sequence from the start to the end of the document.
+```html
+html
 
-**Import one or more instances of a React component at each HTML element distinguished by their tag.**
+<script type="module" src="...index.js"></script>
 
-`ImportReactComponentByTag(rootTag: string, component: any, props?: Object | Object[])`
+...
 
-- `rootTag`: The HTML tag of the root element or elements.
-- `component`: The imported React component.
-- `props`: Optional. If passed as an object, those props are passed to each instance of the React component. If passed as an array of objects, the array must contain exactly as many objects as there are HTML tags of the passed `rootTag`. The props are bijectively mapped to the React components such that props are applied in sequence from the start to the end of the document.
+<react-component data-component="componentWithProps">
+    <p>Hello World</p>
+</react-component>
+<react-component data-component="componentWithProps">
+    <p>Hello World</p>
+</react-component>
+<react-component data-component="componentWithoutProps">
+    <p>Hello World</p>
+</react-component>
+```
 
-## Examples
+```typescript
+index.js
 
+import { ComponentWithProps, ComponentWithoutProps } from 'a-react-library';
+import { ImportReactComponents } from 'import-react-component';
+
+ImportReactComponents("componentWithProps", ExampleComponent, [{...}, {...}]);
+ImportReactComponents("componentWithoutProps", ExampleComponent);
+```
+
+## Expected Behaviour FAQ
+
+### Dynamic DOM
+
+`ImportReactComponents()` uses the Document's `querySelectorAll()` method to retrieve the appropriate `<react-component>` elements. Because this method returns a static `NodeList`, if the DOM is updated dynamically new `<react-component>` elements will not spawn React components. To resolve this, call `ImportReactComponents()` after inserting new `<react-component>` elements into the DOM or removing old elements from it.
+
+### Nested React Components
+
+Because the children of a spawned React component are set using React's `dangerouslySetInnerHTML()` function, nesting `<react-component>` elements will only spawn a React component on the outermost such element. To resolve this, build and import a single React component rather than importing multiple nested components. If the React component nests other React components dynamically, use a prop to indicate which nested component to render.
