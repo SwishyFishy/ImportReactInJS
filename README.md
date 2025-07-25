@@ -81,9 +81,24 @@ RenderReactComponents();
 
 ## Expected Behaviour FAQ
 
-### Dynamic DOM
+### Dynamic DOM Updates
 
-Because `ImportReactComponents()` uses the Document's `querySelectorAll()` method to retrieve the appropriate `<react-component>` elements as a static `NodeList`, updating the DOM dynamically will not add or remove React components. To resolve this, call `ImportReactComponents()` and `RenderReactComponents()` again after dynamically inserting or removing `<react-component>` elements.
+Because `ImportReactComponents()` uses the Document's `querySelectorAll()` method to retrieve the appropriate `<react-component>` elements as a static `NodeList`, updating the DOM dynamically will not add React components. To resolve this, call `ImportReactComponents()` and `RenderReactComponents()` again after dynamically inserting `<react-component>` elements.
+
+```typescript
+// Example: Creating a new React component dynamically whenever the user double-clicks
+
+import { ExampleComponent } from 'a-react-library';
+import { ImportReactComponents, RenderReactComponents } from 'import-react-component';
+
+document.addEventListener('dblclick', () => {
+    const newReactComponent = document.createElement("react-component");
+    newReactComponent.setAttribute("data-component", "exampleComponent");
+    document.body.appendChild(newReactComponent);
+    ImportReactComponents("exampleComponent", ExampleComponent);
+    RenderReactComponents();
+});
+```
 
 ### Nested React Components
 
