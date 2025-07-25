@@ -4,16 +4,6 @@ import { createElement } from 'react';
 // Errors //
 ////////////
 
-// Passed HTML element identifier fails to resolve
-class ElementDoesNotExistError extends Error
-{
-    constructor(message: string)
-    {
-        super(message);
-        this.name = "ElementDoesNotExistError";
-    }
-}
-
 // Passed props array length does not match number of HTML elements
 class ElementPropsCountMismatchError extends Error
 {
@@ -68,12 +58,6 @@ export function ImportReactComponents(componentType: string, component: any, pro
 {
     // Get elements with passed class
     const rootElements: NodeList = document.querySelectorAll(`react-component[data-component=${componentType}]`);
-
-    // Check that at least one component will be created
-    if (rootElements.length <= 0)
-    {
-        throw new ElementDoesNotExistError(`No ${componentType} react-component elements exist.`);
-    }
 
     // Remove duplicates from the reactComponents array
     reactComponents = reactComponents.filter((dom) => dom.type != componentType);
