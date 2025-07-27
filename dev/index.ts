@@ -30,11 +30,11 @@ function AssignReactComponent(componentType: string, rootElement: Node, componen
     // Create the root and the component
     const castRootElement = rootElement as Element;
     const root = createRoot(castRootElement)
-    const content = createElement(component, props, 
-                        createElement("div", {dangerouslySetInnerHTML: {
-                            __html: castRootElement.innerHTML
-                        }})
-                    );
+    const content = createElement(component, props, createElement("div", {
+        dangerouslySetInnerHTML: {
+            __html: castRootElement.innerHTML
+        }
+    }));
 
     // Add the root and content to the reactElements array
     reactComponents.push({type: componentType, root: root, element: content});
