@@ -39,17 +39,8 @@ function AssignReactComponent(componentType: string, rootElement: Node, componen
     // Add the root and content to the reactElements array
     reactComponents.push({type: componentType, root: root, element: content});
 }
-
-// Render all components
-export function RenderReactComponents()
-{
-    reactComponents.forEach((dom) => {
-        dom.root.render(dom.element);
-    });
-}
-
-// Callable Function //
-///////////////////////
+// Callable Functions //
+////////////////////////
 
 // Maps a React component to each <react-component> HTML element
 // props: Object        -> props are passed to each component
@@ -84,4 +75,12 @@ export function ImportReactComponents(componentType: string, component: any, pro
             AssignReactComponent(componentType, rootElements[i], component, props);
         }
     }
+}
+
+// Render all components
+export function RenderReactComponents()
+{
+    reactComponents.forEach((dom) => {
+        dom.root.render(dom.element);
+    });
 }
